@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,15 +15,11 @@ import javax.swing.event.ChangeListener;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
-public class ColorFinderHSV {
+public class ColorFinderThreashold {
 
 	@SuppressWarnings("serial")
 	JFrame view = new JFrame() {
@@ -76,7 +71,7 @@ public class ColorFinderHSV {
 
 	Mat mat;
 
-	int r_ = 180, g_ = 255, b_ = 255, r = 0, g = 0, b = 0;
+	int r_ = 255, g_ = 255, b_ = 255, r = 0, g = 0, b = 0;
 
 	boolean e = false;
 
@@ -84,7 +79,7 @@ public class ColorFinderHSV {
 
 	String f;
 
-	public ColorFinderHSV(String s, int n) {
+	public ColorFinderThreashold(String s, int n) {
 		if (s == null) {
 			cap = new VideoCapture(n);
 			if (!cap.isOpened()) {
@@ -97,24 +92,24 @@ public class ColorFinderHSV {
 			System.exit(1);
 		}
 		view.setSize(640, 480);
-		view.setTitle("Color Finder HSV");
+		view.setTitle("Color Finder RGB");
 		view.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		view.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		view.setVisible(true);
 		palet.setSize(480, 200);
 		palet.setLocation(640, 0);
 		palet.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		palet.setLayout(new GridLayout(7, 1));
-		palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+		palet.setLayout(new GridLayout(3, 1));
+		palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
 		JSlider rmin = new JSlider();
-		rmin.setMaximum(180);
+		rmin.setMaximum(255);
 		rmin.setMinimum(0);
 		rmin.setValue(0);
 		rmin.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				r = rmin.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
 			}
 		});
 		JSlider gmin = new JSlider();
@@ -125,7 +120,7 @@ public class ColorFinderHSV {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				g = gmin.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
 			}
 		});
 		JSlider bmin = new JSlider();
@@ -136,18 +131,18 @@ public class ColorFinderHSV {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				b = bmin.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
 			}
 		});
 		JSlider rmax = new JSlider();
-		rmax.setMaximum(180);
+		rmax.setMaximum(255);
 		rmax.setMinimum(0);
 		rmax.setValue(255);
 		rmax.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				r_ = rmax.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
 			}
 		});
 		JSlider gmax = new JSlider();
@@ -158,7 +153,7 @@ public class ColorFinderHSV {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				g_ = gmax.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
 			}
 		});
 		JSlider bmax = new JSlider();
@@ -169,7 +164,7 @@ public class ColorFinderHSV {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				b_ = bmax.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
 			}
 		});
 		JButton exit = new JButton();
@@ -180,12 +175,30 @@ public class ColorFinderHSV {
 			}
 		});
 		exit.setText("Quit");
-		palet.add(rmin);
-		palet.add(rmax);
-		palet.add(gmin);
-		palet.add(gmax);
-		palet.add(bmin);
-		palet.add(bmax);
+		JSlider min = new JSlider();
+		min.setMaximum(255);
+		min.setMinimum(0);
+		min.setValue(0);
+		min.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				r = min.getValue();
+				palet.setTitle("Min" + r + " Max" + r_);
+			}
+		});
+		JSlider max = new JSlider();
+		max.setMaximum(255);
+		max.setMinimum(0);
+		max.setValue(255);
+		max.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				r_ = max.getValue();
+				palet.setTitle("Min" + r + " Max" + r_);
+			}
+		});
+		palet.add(min);
+		palet.add(max);
 		palet.add(exit);
 		palet.setVisible(true);
 		while (!e) {
@@ -194,31 +207,9 @@ public class ColorFinderHSV {
 			} else {
 				mat = Imgcodecs.imread(new File(f).getAbsolutePath());
 			}
-			Mat matp = mat.clone();
-			ArrayList<MatOfPoint> c = new ArrayList<MatOfPoint>();
-			Imgproc.cvtColor(matp, matp, Imgproc.COLOR_BGR2HLS);
-			Core.inRange(matp, new Scalar(r, g, b), new Scalar(r_, g_, b_), matp);
-			Imgproc.findContours(matp, c, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-			int x = 0;
-			int y = 0;
-			for (int i = 0; i < c.size(); i++) {
-				MatOfPoint mop = c.get(i);
-				Rect rect = Imgproc.boundingRect(mop);
-				x += rect.x + (rect.width / 2);
-				y += rect.y + (rect.height / 2);
-				Imgproc.rectangle(mat, rect.tl(), rect.br(), new Scalar(0, 255, 0));
-
-			}
-			if (!c.isEmpty()) {
-				x /= c.size();
-				y /= c.size();
-				Imgproc.circle(mat, new Point(x, y), 2, new Scalar(0, 0, 255), 2);
-				// Imgproc.line(mat, new Point(x, 0), new Point(x, 480), new
-				// Scalar(0, 255, 0));
-				// Imgproc.line(mat, new Point(0, y), new Point(640, y), new
-				// Scalar(0, 255, 0));
-			}
-			img = matToBufferedImage(mat, null);
+			Mat matp = new Mat();
+			Imgproc.threshold(mat, matp, r, r_, Imgproc.THRESH_BINARY);
+			img = matToBufferedImage(matp, null);
 			view.repaint();
 		}
 		if (cap != null) {
@@ -231,9 +222,9 @@ public class ColorFinderHSV {
 
 	public static void main(String[] args) {
 		if (args.length > 0) {
-			new ColorFinderHSV(args[0], 0);
+			new ColorFinderThreashold(args[0], 0);
 		} else {
-			new ColorFinderHSV(null, 0);
+			new ColorFinderThreashold(null, 0);
 		}
 	}
 

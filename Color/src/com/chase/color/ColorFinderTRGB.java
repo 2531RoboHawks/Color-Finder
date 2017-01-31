@@ -24,7 +24,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
-public class ColorFinderHSV {
+public class ColorFinderTRGB {
 
 	@SuppressWarnings("serial")
 	JFrame view = new JFrame() {
@@ -76,7 +76,7 @@ public class ColorFinderHSV {
 
 	Mat mat;
 
-	int r_ = 180, g_ = 255, b_ = 255, r = 0, g = 0, b = 0;
+	int r_ = 255, g_ = 255, b_ = 255, r = 0, g = 0, b = 0, m = 0, m_ = 0;
 
 	boolean e = false;
 
@@ -84,7 +84,7 @@ public class ColorFinderHSV {
 
 	String f;
 
-	public ColorFinderHSV(String s, int n) {
+	public ColorFinderTRGB(String s, int n) {
 		if (s == null) {
 			cap = new VideoCapture(n);
 			if (!cap.isOpened()) {
@@ -97,24 +97,26 @@ public class ColorFinderHSV {
 			System.exit(1);
 		}
 		view.setSize(640, 480);
-		view.setTitle("Color Finder HSV");
+		view.setTitle("Color Finder RGB");
 		view.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		view.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		view.setVisible(true);
-		palet.setSize(480, 200);
+		palet.setSize(600, 300);
 		palet.setLocation(640, 0);
 		palet.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		palet.setLayout(new GridLayout(7, 1));
-		palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+		palet.setLayout(new GridLayout(9, 1));
+		palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_ + " Min " + m
+				+ " Max " + m_);
 		JSlider rmin = new JSlider();
-		rmin.setMaximum(180);
+		rmin.setMaximum(255);
 		rmin.setMinimum(0);
 		rmin.setValue(0);
 		rmin.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				r = rmin.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
+						+ " Min " + m + " Max " + m_);
 			}
 		});
 		JSlider gmin = new JSlider();
@@ -125,7 +127,8 @@ public class ColorFinderHSV {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				g = gmin.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
+						+ " Min " + m + " Max " + m_);
 			}
 		});
 		JSlider bmin = new JSlider();
@@ -136,18 +139,20 @@ public class ColorFinderHSV {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				b = bmin.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
+						+ " Min " + m + " Max " + m_);
 			}
 		});
 		JSlider rmax = new JSlider();
-		rmax.setMaximum(180);
+		rmax.setMaximum(255);
 		rmax.setMinimum(0);
 		rmax.setValue(255);
 		rmax.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				r_ = rmax.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
+						+ " Min " + m + " Max " + m_);
 			}
 		});
 		JSlider gmax = new JSlider();
@@ -158,7 +163,8 @@ public class ColorFinderHSV {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				g_ = gmax.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
+						+ " Min " + m + " Max " + m_);
 			}
 		});
 		JSlider bmax = new JSlider();
@@ -169,7 +175,8 @@ public class ColorFinderHSV {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				b_ = bmax.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
+						+ " Min " + m + " Max " + m_);
 			}
 		});
 		JButton exit = new JButton();
@@ -180,6 +187,32 @@ public class ColorFinderHSV {
 			}
 		});
 		exit.setText("Quit");
+		JSlider min = new JSlider();
+		min.setMaximum(255);
+		min.setMinimum(0);
+		min.setValue(0);
+		min.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				m = min.getValue();
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
+						+ " Min " + m + " Max " + m_);
+			}
+		});
+		JSlider max = new JSlider();
+		max.setMaximum(255);
+		max.setMinimum(0);
+		max.setValue(255);
+		max.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				m_ = max.getValue();
+				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
+						+ " Min " + m + " Max " + m_);
+			}
+		});
+		palet.add(min);
+		palet.add(max);
 		palet.add(rmin);
 		palet.add(rmax);
 		palet.add(gmin);
@@ -196,8 +229,8 @@ public class ColorFinderHSV {
 			}
 			Mat matp = mat.clone();
 			ArrayList<MatOfPoint> c = new ArrayList<MatOfPoint>();
-			Imgproc.cvtColor(matp, matp, Imgproc.COLOR_BGR2HLS);
-			Core.inRange(matp, new Scalar(r, g, b), new Scalar(r_, g_, b_), matp);
+			Imgproc.threshold(matp, matp, m, m_, Imgproc.THRESH_BINARY);
+			Core.inRange(matp, new Scalar(b, g, r), new Scalar(b_, g_, r_), matp);
 			Imgproc.findContours(matp, c, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 			int x = 0;
 			int y = 0;
@@ -207,7 +240,6 @@ public class ColorFinderHSV {
 				x += rect.x + (rect.width / 2);
 				y += rect.y + (rect.height / 2);
 				Imgproc.rectangle(mat, rect.tl(), rect.br(), new Scalar(0, 255, 0));
-
 			}
 			if (!c.isEmpty()) {
 				x /= c.size();
@@ -231,9 +263,9 @@ public class ColorFinderHSV {
 
 	public static void main(String[] args) {
 		if (args.length > 0) {
-			new ColorFinderHSV(args[0], 0);
+			new ColorFinderTRGB(args[0], 0);
 		} else {
-			new ColorFinderHSV(null, 0);
+			new ColorFinderTRGB(null, 0);
 		}
 	}
 

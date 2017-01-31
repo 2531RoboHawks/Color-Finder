@@ -87,6 +87,9 @@ public class ColorFinderRGB {
 	public ColorFinderRGB(String s, int n) {
 		if (s == null) {
 			cap = new VideoCapture(n);
+			if (!cap.isOpened()) {
+				System.exit(1);
+			}
 			mat = new Mat();
 		} else if (new File(s).exists()) {
 			f = s;

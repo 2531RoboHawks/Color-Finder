@@ -87,6 +87,9 @@ public class ColorFinderHLS {
 	public ColorFinderHLS(String s, int n) {
 		if (s == null) {
 			cap = new VideoCapture(n);
+			if (!cap.isOpened()) {
+				System.exit(1);
+			}
 			mat = new Mat();
 		} else if (new File(s).exists()) {
 			f = s;
@@ -209,10 +212,11 @@ public class ColorFinderHLS {
 			if (!c.isEmpty()) {
 				x /= c.size();
 				y /= c.size();
-				 Imgproc.circle(mat, new Point(x, y), 2, new Scalar(0, 0,
-				 255), 2);
-				//Imgproc.line(mat, new Point(x, 0), new Point(x, 480), new Scalar(0, 255, 0));
-				//Imgproc.line(mat, new Point(0, y), new Point(640, y), new Scalar(0, 255, 0));
+				Imgproc.circle(mat, new Point(x, y), 2, new Scalar(0, 0, 255), 2);
+				// Imgproc.line(mat, new Point(x, 0), new Point(x, 480), new
+				// Scalar(0, 255, 0));
+				// Imgproc.line(mat, new Point(0, y), new Point(640, y), new
+				// Scalar(0, 255, 0));
 			}
 			img = matToBufferedImage(mat, null);
 			view.repaint();

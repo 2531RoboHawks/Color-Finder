@@ -14,7 +14,7 @@ public class Main {
 	public static void main(String[] args) {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(200, 200);
-		f.setLayout(new GridLayout(3, 1));
+		f.setLayout(new GridLayout(6, 1));
 		JButton rgb = new JButton();
 		rgb.addActionListener(new ActionListener() {
 
@@ -24,9 +24,14 @@ public class Main {
 					public void run() {
 						f.dispose();
 						if (args.length > 0) {
-							new ColorFinderRGB(args[0], 1);
+							try {
+								int n = Integer.parseInt(args[0]);
+								new ColorFinderRGB(null, n);
+							} catch (NumberFormatException e) {
+								new ColorFinderRGB(args[0], 0);
+							}
 						} else {
-							new ColorFinderRGB(null, 1);
+							new ColorFinderRGB(null, 0);
 						}
 					}
 				};
@@ -45,9 +50,14 @@ public class Main {
 					public void run() {
 						f.dispose();
 						if (args.length > 0) {
-							new ColorFinderHSV(args[0], 1);
+							try {
+								int n = Integer.parseInt(args[0]);
+								new ColorFinderHSV(null, n);
+							} catch (NumberFormatException e) {
+								new ColorFinderHSV(args[0], 0);
+							}
 						} else {
-							new ColorFinderHSV(null, 1);
+							new ColorFinderHSV(null, 0);
 						}
 					}
 				};
@@ -66,11 +76,15 @@ public class Main {
 					public void run() {
 						f.dispose();
 						if (args.length > 0) {
-							new ColorFinderHLS(args[0], 1);
+							try {
+								int n = Integer.parseInt(args[0]);
+								new ColorFinderHLS(null, n);
+							} catch (NumberFormatException e) {
+								new ColorFinderHLS(args[0], 0);
+							}
 						} else {
-							new ColorFinderHLS(null, 1);
+							new ColorFinderHLS(null, 0);
 						}
-
 					}
 				};
 				t.start();
@@ -79,6 +93,83 @@ public class Main {
 		});
 		hls.setText("HLS");
 		f.add(hls);
+		JButton canny = new JButton();
+		canny.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Thread t = new Thread() {
+					public void run() {
+						f.dispose();
+						if (args.length > 0) {
+							try {
+								int n = Integer.parseInt(args[0]);
+								new ColorFinderCanny(null, n);
+							} catch (NumberFormatException e) {
+								new ColorFinderCanny(args[0], 0);
+							}
+						} else {
+							new ColorFinderCanny(null, 0);
+						}
+					}
+				};
+				t.start();
+			}
+
+		});
+		canny.setText("Canny");
+		f.add(canny);
+		JButton th = new JButton();
+		th.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Thread t = new Thread() {
+					public void run() {
+						f.dispose();
+						if (args.length > 0) {
+							try {
+								int n = Integer.parseInt(args[0]);
+								new ColorFinderThreashold(null, n);
+							} catch (NumberFormatException e) {
+								new ColorFinderThreashold(args[0], 0);
+							}
+						} else {
+							new ColorFinderThreashold(null, 0);
+						}
+					}
+				};
+				t.start();
+			}
+		});
+		th.setText("Threashold");
+		f.add(th);
+		JButton ne = new JButton();
+		ne.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Thread t = new Thread() {
+					public void run() {
+						f.dispose();
+						if (args.length > 0) {
+							try {
+								int n = Integer.parseInt(args[0]);
+								new ColorFinderTRGB(null, n);
+							} catch (NumberFormatException e) {
+								new ColorFinderTRGB(args[0], 0);
+							}
+						} else {
+							new ColorFinderTRGB(null, 0);
+						}
+					}
+				};
+				t.start();
+			}
+
+		});
+		ne.setText("Threash RGB");
+		f.add(ne);
 		f.setVisible(true);
 	}
 
