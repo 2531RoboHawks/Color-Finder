@@ -17,8 +17,6 @@ import javax.swing.event.ChangeListener;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -76,7 +74,7 @@ public class ColorFinderHSV {
 
 	Mat mat;
 
-	int r_ = 180, g_ = 255, b_ = 255, r = 0, g = 0, b = 0;
+	int h_ = 180, s_ = 255, v_ = 255, h = 0, s = 0, v = 0;
 
 	boolean e = false;
 
@@ -84,12 +82,12 @@ public class ColorFinderHSV {
 
 	String f;
 
-	public ColorFinderHSV(String s, int n) {
-		if (s == null) {
+	public ColorFinderHSV(String ss, int n) {
+		if (ss == null) {
 			cap = new VideoCapture(n);
 			mat = new Mat();
-		} else if (new File(s).exists()) {
-			f = s;
+		} else if (new File(ss).exists()) {
+			f = ss;
 		} else {
 			System.exit(1);
 		}
@@ -102,60 +100,60 @@ public class ColorFinderHSV {
 		palet.setLocation(640, 0);
 		palet.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		palet.setLayout(new GridLayout(7, 1));
-		palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
-		JSlider rmin = new JSlider();
-		rmin.setMaximum(180);
-		rmin.setMinimum(0);
-		rmin.setValue(0);
-		rmin.addChangeListener(new ChangeListener() {
+		palet.setTitle("Hmin" + h + " Hmax" + h_ + " Lmin" + s + " Lmax" + s_ + " Smin" + v + " Smax" + v_);
+		JSlider hmin = new JSlider();
+		hmin.setMaximum(180);
+		hmin.setMinimum(0);
+		hmin.setValue(0);
+		hmin.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				r = rmin.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				h = hmin.getValue();
+				palet.setTitle("Hmin" + h + " Hmax" + h_ + " Lmin" + s + " Lmax" + s_ + " Smin" + v + " Smax" + v_);
 			}
 		});
-		JSlider gmin = new JSlider();
-		gmin.setMaximum(255);
-		gmin.setMinimum(0);
-		gmin.setValue(0);
-		gmin.addChangeListener(new ChangeListener() {
+		JSlider smin = new JSlider();
+		smin.setMaximum(255);
+		smin.setMinimum(0);
+		smin.setValue(0);
+		smin.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				g = gmin.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				s = smin.getValue();
+				palet.setTitle("Hmin" + h + " Hmax" + h_ + " Lmin" + s + " Lmax" + s_ + " Smin" + v + " Smax" + v_);
 			}
 		});
-		JSlider bmin = new JSlider();
-		bmin.setMaximum(255);
-		bmin.setMinimum(0);
-		bmin.setValue(0);
-		bmin.addChangeListener(new ChangeListener() {
+		JSlider vmin = new JSlider();
+		vmin.setMaximum(255);
+		vmin.setMinimum(0);
+		vmin.setValue(0);
+		vmin.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				b = bmin.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				v = vmin.getValue();
+				palet.setTitle("Hmin" + h + " Hmax" + h_ + " Lmin" + s + " Lmax" + s_ + " Smin" + v + " Smax" + v_);
 			}
 		});
-		JSlider rmax = new JSlider();
-		rmax.setMaximum(180);
-		rmax.setMinimum(0);
-		rmax.setValue(255);
-		rmax.addChangeListener(new ChangeListener() {
+		JSlider hmax = new JSlider();
+		hmax.setMaximum(180);
+		hmax.setMinimum(0);
+		hmax.setValue(255);
+		hmax.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				r_ = rmax.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				h_ = hmax.getValue();
+				palet.setTitle("Hmin" + h + " Hmax" + h_ + " Lmin" + s + " Lmax" + s_ + " Smin" + v + " Smax" + v_);
 			}
 		});
-		JSlider gmax = new JSlider();
-		gmax.setMaximum(255);
-		gmax.setMinimum(0);
-		gmax.setValue(255);
-		gmax.addChangeListener(new ChangeListener() {
+		JSlider smax = new JSlider();
+		smax.setMaximum(255);
+		smax.setMinimum(0);
+		smax.setValue(255);
+		smax.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				g_ = gmax.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				s_ = smax.getValue();
+				palet.setTitle("Hmin" + h + " Hmax" + h_ + " Lmin" + s + " Lmax" + s_ + " Smin" + v + " Smax" + v_);
 			}
 		});
 		JSlider bmax = new JSlider();
@@ -165,8 +163,8 @@ public class ColorFinderHSV {
 		bmax.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				b_ = bmax.getValue();
-				palet.setTitle("Hmin" + r + " Hmax" + r_ + " Lmin" + g + " Lmax" + g_ + " Smin" + b + " Smax" + b_);
+				v_ = bmax.getValue();
+				palet.setTitle("Hmin" + h + " Hmax" + h_ + " Lmin" + s + " Lmax" + s_ + " Smin" + v + " Smax" + v_);
 			}
 		});
 		JButton exit = new JButton();
@@ -177,44 +175,69 @@ public class ColorFinderHSV {
 			}
 		});
 		exit.setText("Quit");
-		palet.add(rmin);
-		palet.add(rmax);
-		palet.add(gmin);
-		palet.add(gmax);
-		palet.add(bmin);
+		palet.add(hmin);
+		palet.add(hmax);
+		palet.add(smin);
+		palet.add(smax);
+		palet.add(vmin);
 		palet.add(bmax);
 		palet.add(exit);
 		palet.setVisible(true);
+
 		while (!e) {
 			if (cap != null) {
 				cap.read(mat);
 			} else {
 				mat = Imgcodecs.imread(new File(f).getAbsolutePath());
 			}
-			Mat matp = mat.clone();
-			ArrayList<MatOfPoint> c = new ArrayList<MatOfPoint>();
-			Imgproc.cvtColor(matp, matp, Imgproc.COLOR_BGR2HLS);
-			Core.inRange(matp, new Scalar(r, g, b), new Scalar(r_, g_, b_), matp);
-			Imgproc.findContours(matp, c, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-			int x = 0;
-			int y = 0;
-			for (int i = 0; i < c.size(); i++) {
-				MatOfPoint mop = c.get(i);
-				Rect rect = Imgproc.boundingRect(mop);
-				x += rect.x + (rect.width / 2);
-				y += rect.y + (rect.height / 2);
-				Imgproc.rectangle(mat, rect.tl(), rect.br(), new Scalar(0, 255, 0));
+			Mat hsv = mat.clone();
+			ArrayList<Mat> channels = new ArrayList<Mat>();
+			Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_BGR2HSV);
+			Core.split(hsv, channels);
+			Mat H = channels.get(0);
+			Mat S = channels.get(1);
+			Mat V = channels.get(2);
+			Mat shiftedV = V.clone();
+			int shift = 25;
+			byte[] data = new byte[(int) (shiftedV.cols() * shiftedV.rows() * shiftedV.elemSize())];
+			shiftedV.get(0, 0, data);
+			for (int j = 0; j < data.length; j += 2) {
+				byte b = (byte) ((data[j] + shift) % 180);
+				data[j] = b;
+			}
+			Mat cannyV = new Mat();
+			Imgproc.Canny(shiftedV, cannyV, 200, 100);
+			ArrayList<MatOfPoint> contoursV = new ArrayList<MatOfPoint>();
+
+			Imgproc.findContours(cannyV, contoursV, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+			Mat outputV = mat.clone();
+			for (int i = 0; i < contoursV.size(); i++) {
+				if (Imgproc.contourArea(contoursV.get(i)) > 10) {
+					Imgproc.drawContours(outputV, contoursV, i, new Scalar(0, 0, 255));
+
+				}
 
 			}
-			if (!c.isEmpty()) {
-				x /= c.size();
-				y /= c.size();
-				Imgproc.circle(mat, new Point(x, y), 2, new Scalar(0, 0, 255), 2);
-				// Imgproc.line(mat, new Point(x, 0), new Point(x, 480), new
-				// Scalar(0, 255, 0));
-				// Imgproc.line(mat, new Point(0, y), new Point(640, y), new
-				// Scalar(0, 255, 0));
-			}
+			mat = outputV.clone();
+			/*
+			 * Mat matp = mat.clone(); ArrayList<MatOfPoint> c = new
+			 * ArrayList<MatOfPoint>(); Imgproc.cvtColor(matp, matp,
+			 * Imgproc.COLOR_BGR2HLS); Core.inRange(matp, new Scalar(h, s, v),
+			 * new Scalar(h_, s_, v_), matp); Imgproc.findContours(matp, c, new
+			 * Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE); int x =
+			 * 0; int y = 0; for (int i = 0; i < c.size(); i++) { MatOfPoint mop
+			 * = c.get(i); Rect rect = Imgproc.boundingRect(mop); x += rect.x +
+			 * (rect.width / 2); y += rect.y + (rect.height / 2);
+			 * Imgproc.rectangle(mat, rect.tl(), rect.br(), new Scalar(0, 255,
+			 * 0));
+			 * 
+			 * } if (!c.isEmpty()) { x /= c.size(); y /= c.size();
+			 * Imgproc.circle(mat, new Point(x, y), 2, new Scalar(0, 0, 255),
+			 * 2); // Imgproc.line(mat, new Point(x, 0), new Point(x, 480), new
+			 * // Scalar(0, 255, 0)); // Imgproc.line(mat, new Point(0, y), new
+			 * Point(640, y), new // Scalar(0, 255, 0)); } img =
+			 * matToBufferedImage(mat, null); view.repaint();
+			 */
 			img = matToBufferedImage(mat, null);
 			view.repaint();
 		}
