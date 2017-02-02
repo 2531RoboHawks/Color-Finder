@@ -2,6 +2,7 @@ package com.chase.color;
 
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ import javax.swing.event.ChangeListener;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -190,56 +192,56 @@ public class ColorFinderHSV {
 			} else {
 				mat = Imgcodecs.imread(new File(f).getAbsolutePath());
 			}
-			Mat hsv = mat.clone();
-			ArrayList<Mat> channels = new ArrayList<Mat>();
-			Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_BGR2HSV);
-			Core.split(hsv, channels);
-			Mat H = channels.get(0);
-			Mat S = channels.get(1);
-			Mat V = channels.get(2);
-			Mat shiftedV = V.clone();
-			int shift = 25;
-			byte[] data = new byte[(int) (shiftedV.cols() * shiftedV.rows() * shiftedV.elemSize())];
-			shiftedV.get(0, 0, data);
-			for (int j = 0; j < data.length; j += 2) {
-				byte b = (byte) ((data[j] + shift) % 180);
-				data[j] = b;
-			}
-			Mat cannyV = new Mat();
-			Imgproc.Canny(shiftedV, cannyV, 200, 100);
-			ArrayList<MatOfPoint> contoursV = new ArrayList<MatOfPoint>();
-
-			Imgproc.findContours(cannyV, contoursV, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-			Mat outputV = mat.clone();
-			for (int i = 0; i < contoursV.size(); i++) {
-				if (Imgproc.contourArea(contoursV.get(i)) > 10) {
-					Imgproc.drawContours(outputV, contoursV, i, new Scalar(0, 0, 255));
-
-				}
-
-			}
-			mat = outputV.clone();
 			/*
-			 * Mat matp = mat.clone(); ArrayList<MatOfPoint> c = new
-			 * ArrayList<MatOfPoint>(); Imgproc.cvtColor(matp, matp,
-			 * Imgproc.COLOR_BGR2HLS); Core.inRange(matp, new Scalar(h, s, v),
-			 * new Scalar(h_, s_, v_), matp); Imgproc.findContours(matp, c, new
-			 * Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE); int x =
-			 * 0; int y = 0; for (int i = 0; i < c.size(); i++) { MatOfPoint mop
-			 * = c.get(i); Rect rect = Imgproc.boundingRect(mop); x += rect.x +
-			 * (rect.width / 2); y += rect.y + (rect.height / 2);
-			 * Imgproc.rectangle(mat, rect.tl(), rect.br(), new Scalar(0, 255,
-			 * 0));
+			 * Mat hsv = mat.clone(); ArrayList<Mat> channels = new
+			 * ArrayList<Mat>(); Imgproc.cvtColor(hsv, hsv,
+			 * Imgproc.COLOR_BGR2HSV); Core.split(hsv, channels); Mat H =
+			 * channels.get(0); Mat S = channels.get(1); Mat V =
+			 * channels.get(2); Mat shiftedV = V.clone(); int shift = 25; byte[]
+			 * data = new byte[(int) (shiftedV.cols() * shiftedV.rows() *
+			 * shiftedV.elemSize())]; shiftedV.get(0, 0, data); for (int j = 0;
+			 * j < data.length; j += 2) { byte b = (byte) ((data[j] + shift) %
+			 * 180); data[j] = b; } Mat cannyV = new Mat();
+			 * Imgproc.Canny(shiftedV, cannyV, 200, 100); ArrayList<MatOfPoint>
+			 * contoursV = new ArrayList<MatOfPoint>();
 			 * 
-			 * } if (!c.isEmpty()) { x /= c.size(); y /= c.size();
-			 * Imgproc.circle(mat, new Point(x, y), 2, new Scalar(0, 0, 255),
-			 * 2); // Imgproc.line(mat, new Point(x, 0), new Point(x, 480), new
-			 * // Scalar(0, 255, 0)); // Imgproc.line(mat, new Point(0, y), new
-			 * Point(640, y), new // Scalar(0, 255, 0)); } img =
-			 * matToBufferedImage(mat, null); view.repaint();
+			 * Imgproc.findContours(cannyV, contoursV, new Mat(),
+			 * Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE); Mat outputV =
+			 * mat.clone(); for (int i = 0; i < contoursV.size(); i++) { if
+			 * (Imgproc.contourArea(contoursV.get(i)) > 10) {
+			 * Imgproc.drawContours(outputV, contoursV, i, new Scalar(0, 0,
+			 * 255));
+			 * 
+			 * }
+			 * 
+			 * } mat = outputV.clone();
 			 */
+
+			Mat matp = mat.clone();
+			ArrayList<MatOfPoint> c = new ArrayList<MatOfPoint>();
+			Imgproc.cvtColor(matp, matp, Imgproc.COLOR_BGR2HLS);
+			Core.inRange(matp, new Scalar(h, s, v), new Scalar(h_, s_, v_), matp);
+			Imgproc.findContours(matp, c, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+			int x = 0;
+			int y = 0;
+			for (int i = 0; i < c.size(); i++) {
+				MatOfPoint mop = c.get(i);
+				Rect rect = Imgproc.boundingRect(mop);
+				x += rect.x + (rect.width / 2);
+				y += rect.y + (rect.height / 2);
+				Imgproc.rectangle(mat, rect.tl(), rect.br(), new Scalar(0, 255, 0));
+
+			}
+			if (!c.isEmpty()) {
+				//x /= c.size();
+				//y /= c.size();
+				//Imgproc.circle(mat, new Point(x, y), 2, new Scalar(0, 0, 255), 2);
+				//Imgproc.line(mat, new Point(x, 0), new Point(x, 480), new Scalar(0, 255, 0));
+				//Imgproc.line(mat, new Point(0, y), new Point(640, y), new Scalar(0, 255, 0));
+			}
 			img = matToBufferedImage(mat, null);
 			view.repaint();
+
 		}
 		if (cap != null) {
 			cap.release();
