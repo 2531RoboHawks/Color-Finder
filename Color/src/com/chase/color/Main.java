@@ -14,7 +14,7 @@ public class Main {
 	public static void main(String[] args) {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(200, 200);
-		f.setLayout(new GridLayout(6, 1));
+		f.setLayout(new GridLayout(7, 1));
 		JButton rgb = new JButton();
 		rgb.addActionListener(new ActionListener() {
 
@@ -117,7 +117,7 @@ public class Main {
 			}
 
 		});
-		canny.setText("Canny");
+		canny.setText("Canny View");
 		f.add(canny);
 		JButton th = new JButton();
 		th.addActionListener(new ActionListener() {
@@ -142,7 +142,7 @@ public class Main {
 				t.start();
 			}
 		});
-		th.setText("Threashold");
+		th.setText("Threashold View");
 		f.add(th);
 		JButton ne = new JButton();
 		ne.addActionListener(new ActionListener() {
@@ -168,8 +168,34 @@ public class Main {
 			}
 
 		});
-		ne.setText("Threash RGB");
+		ne.setText("Threashold RGB");
 		f.add(ne);
+		JButton e = new JButton();
+		e.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Thread t = new Thread() {
+					public void run() {
+						f.dispose();
+						if (args.length > 0) {
+							try {
+								int n = Integer.parseInt(args[0]);
+								new ColorFinderTSC(null, n);
+							} catch (NumberFormatException e) {
+								new ColorFinderTSC(args[0], 0);
+							}
+						} else {
+							new ColorFinderTSC(null, 0);
+						}
+					}
+				};
+				t.start();
+			}
+
+		});
+		e.setText("Threashold Split Canny");
+		f.add(e);
 		f.setVisible(true);
 	}
 

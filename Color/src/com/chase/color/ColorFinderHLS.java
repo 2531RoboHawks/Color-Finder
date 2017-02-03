@@ -97,7 +97,7 @@ public class ColorFinderHLS {
 			System.exit(1);
 		}
 		view.setSize(640, 480);
-		view.setTitle("Color Finder HSV");
+		view.setTitle("Color Finder HLS");
 		view.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		view.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		view.setVisible(true);

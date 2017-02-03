@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,11 +16,15 @@ import javax.swing.event.ChangeListener;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
-public class ColorFinderThreashold {
+public class ColorFinderTSC {
 
 	@SuppressWarnings("serial")
 	JFrame view = new JFrame() {
@@ -71,7 +76,7 @@ public class ColorFinderThreashold {
 
 	Mat mat;
 
-	int r_ = 255, g_ = 255, b_ = 255, r = 0, g = 0, b = 0;
+	int threash = 0, canny1 = 0, canny2 = 10000;
 
 	boolean e = false;
 
@@ -79,7 +84,7 @@ public class ColorFinderThreashold {
 
 	String f;
 
-	public ColorFinderThreashold(String s, int n) {
+	public ColorFinderTSC(String s, int n) {
 		if (s == null) {
 			cap = new VideoCapture(n);
 			if (!cap.isOpened()) {
@@ -92,81 +97,15 @@ public class ColorFinderThreashold {
 			System.exit(1);
 		}
 		view.setSize(640, 480);
-		view.setTitle("Color Finder Threash View");
+		view.setTitle("Color Finder TSC");
 		view.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		view.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		view.setVisible(true);
-		palet.setSize(480, 200);
+		palet.setSize(600, 300);
 		palet.setLocation(640, 0);
 		palet.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		palet.setLayout(new GridLayout(2, 1));
-		palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
-		JSlider rmin = new JSlider();
-		rmin.setMaximum(255);
-		rmin.setMinimum(0);
-		rmin.setValue(0);
-		rmin.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				r = rmin.getValue();
-				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
-			}
-		});
-		JSlider gmin = new JSlider();
-		gmin.setMaximum(255);
-		gmin.setMinimum(0);
-		gmin.setValue(0);
-		gmin.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				g = gmin.getValue();
-				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
-			}
-		});
-		JSlider bmin = new JSlider();
-		bmin.setMaximum(255);
-		bmin.setMinimum(0);
-		bmin.setValue(0);
-		bmin.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				b = bmin.getValue();
-				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
-			}
-		});
-		JSlider rmax = new JSlider();
-		rmax.setMaximum(255);
-		rmax.setMinimum(0);
-		rmax.setValue(255);
-		rmax.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				r_ = rmax.getValue();
-				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
-			}
-		});
-		JSlider gmax = new JSlider();
-		gmax.setMaximum(255);
-		gmax.setMinimum(0);
-		gmax.setValue(255);
-		gmax.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				g_ = gmax.getValue();
-				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
-			}
-		});
-		JSlider bmax = new JSlider();
-		bmax.setMaximum(255);
-		bmax.setMinimum(0);
-		bmax.setValue(255);
-		bmax.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				b_ = bmax.getValue();
-				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
-			}
-		});
+		palet.setLayout(new GridLayout(4, 1));
+		palet.setTitle("Threash" + threash + " Canny1 " + canny1 + " Canny2" + canny2);
 		JButton exit = new JButton();
 		exit.addActionListener(new ActionListener() {
 			@Override
@@ -175,28 +114,40 @@ public class ColorFinderThreashold {
 			}
 		});
 		exit.setText("Quit");
+		JSlider thr = new JSlider();
+		thr.setMinimum(0);
+		thr.setMaximum(255);
+		thr.setValue(0);
+		thr.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				threash = thr.getValue();
+				palet.setTitle("Threash" + threash + " Canny1 " + canny1 + " Canny2" + canny2);
+			}
+		});
 		JSlider min = new JSlider();
-		min.setMaximum(255);
 		min.setMinimum(0);
+		min.setMaximum(10000);
 		min.setValue(0);
 		min.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				r = min.getValue();
-				palet.setTitle("Threash" + r);
+				canny1 = min.getValue();
+				palet.setTitle("Threash" + threash + " Canny1 " + canny1 + " Canny2" + canny2);
 			}
 		});
 		JSlider max = new JSlider();
-		max.setMaximum(255);
 		max.setMinimum(0);
-		max.setValue(255);
+		max.setMaximum(10000);
+		max.setValue(10000);
 		max.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				r_ = max.getValue();
-				palet.setTitle("Threash" + r);
+				canny2 = max.getValue();
+				palet.setTitle("Threash" + threash + " Canny1 " + canny1 + " Canny2" + canny2);
 			}
 		});
+		palet.add(thr);
 		palet.add(min);
 		palet.add(max);
 		palet.add(exit);
@@ -207,9 +158,34 @@ public class ColorFinderThreashold {
 			} else {
 				mat = Imgcodecs.imread(new File(f).getAbsolutePath());
 			}
-			Mat matp = new Mat();
-			Imgproc.threshold(mat, matp, r, 255, Imgproc.THRESH_BINARY);
-			img = matToBufferedImage(matp, null);
+			Mat mato = mat.clone();
+			ArrayList<MatOfPoint> c = new ArrayList<MatOfPoint>();
+			ArrayList<Mat> split = new ArrayList<Mat>();
+			Imgproc.cvtColor(mato, mato, Imgproc.COLOR_BGR2RGB);
+			Imgproc.threshold(mato, mato, threash, 255, Imgproc.THRESH_BINARY);
+			Core.split(mato, split);
+			Mat matg = split.get(1);
+			Imgproc.Canny(matg, mato, canny1, canny2);
+			Imgproc.findContours(mato, c, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+			int x = 0;
+			int y = 0;
+			for (int i = 0; i < c.size(); i++) {
+				MatOfPoint mop = c.get(i);
+				Rect rect = Imgproc.boundingRect(mop);
+				x += rect.x + (rect.width / 2);
+				y += rect.y + (rect.height / 2);
+				Imgproc.rectangle(mat, rect.tl(), rect.br(), new Scalar(0, 255, 0));
+			}
+			if (!c.isEmpty()) {
+				x /= c.size();
+				y /= c.size();
+				Imgproc.circle(mat, new Point(x, y), 2, new Scalar(0, 0, 255), 2);
+				// Imgproc.line(mat, new Point(x, 0), new Point(x, 480), new
+				// Scalar(0, 255, 0));
+				// Imgproc.line(mat, new Point(0, y), new Point(640, y), new
+				// Scalar(0, 255, 0));
+			}
+			img = matToBufferedImage(mat, null);
 			view.repaint();
 		}
 		if (cap != null) {
@@ -222,9 +198,9 @@ public class ColorFinderThreashold {
 
 	public static void main(String[] args) {
 		if (args.length > 0) {
-			new ColorFinderThreashold(args[0], 0);
+			new ColorFinderTSC(args[0], 0);
 		} else {
-			new ColorFinderThreashold(null, 0);
+			new ColorFinderTSC(null, 0);
 		}
 	}
 

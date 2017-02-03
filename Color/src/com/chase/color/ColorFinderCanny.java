@@ -92,7 +92,7 @@ public class ColorFinderCanny {
 			System.exit(1);
 		}
 		view.setSize(640, 480);
-		view.setTitle("Color Finder RGB");
+		view.setTitle("Color Finder Canny View");
 		view.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		view.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		view.setVisible(true);
@@ -100,7 +100,7 @@ public class ColorFinderCanny {
 		palet.setLocation(640, 0);
 		palet.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		palet.setLayout(new GridLayout(3, 1));
-		palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_);
+		palet.setTitle("Canny1" + r + " Canny2" + r_);
 		JSlider rmin = new JSlider();
 		rmin.setMaximum(255);
 		rmin.setMinimum(0);
@@ -183,7 +183,7 @@ public class ColorFinderCanny {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				r = min.getValue();
-				palet.setTitle("Min" + r + " Max" + r_);
+				palet.setTitle("Canny1" + r + " Canny2" + r_);
 			}
 		});
 		JSlider max = new JSlider();
@@ -194,7 +194,7 @@ public class ColorFinderCanny {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				r_ = max.getValue();
-				palet.setTitle("Min" + r + " Max" + r_);
+				palet.setTitle("Canny1" + r + " Canny2" + r_);
 			}
 		});
 		palet.add(min);

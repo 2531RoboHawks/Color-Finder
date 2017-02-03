@@ -97,16 +97,16 @@ public class ColorFinderTRGB {
 			System.exit(1);
 		}
 		view.setSize(640, 480);
-		view.setTitle("Color Finder RGB");
+		view.setTitle("Color Finder TRGB");
 		view.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		view.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		view.setVisible(true);
 		palet.setSize(600, 300);
 		palet.setLocation(640, 0);
 		palet.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		palet.setLayout(new GridLayout(9, 1));
-		palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_ + " Min " + m
-				+ " Max " + m_);
+		palet.setLayout(new GridLayout(8, 1));
+		palet.setTitle(
+				"Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_ + " Threash " + m);
 		JSlider rmin = new JSlider();
 		rmin.setMaximum(255);
 		rmin.setMinimum(0);
@@ -116,7 +116,7 @@ public class ColorFinderTRGB {
 			public void stateChanged(ChangeEvent arg0) {
 				r = rmin.getValue();
 				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
-						+ " Min " + m + " Max " + m_);
+						+ " Threash" + m);
 			}
 		});
 		JSlider gmin = new JSlider();
@@ -128,7 +128,7 @@ public class ColorFinderTRGB {
 			public void stateChanged(ChangeEvent arg0) {
 				g = gmin.getValue();
 				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
-						+ " Min " + m + " Max " + m_);
+						+ " Threash " + m);
 			}
 		});
 		JSlider bmin = new JSlider();
@@ -140,7 +140,7 @@ public class ColorFinderTRGB {
 			public void stateChanged(ChangeEvent arg0) {
 				b = bmin.getValue();
 				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
-						+ " Min " + m + " Max " + m_);
+						+ " Thresh " + m);
 			}
 		});
 		JSlider rmax = new JSlider();
@@ -152,7 +152,7 @@ public class ColorFinderTRGB {
 			public void stateChanged(ChangeEvent arg0) {
 				r_ = rmax.getValue();
 				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
-						+ " Min " + m + " Max " + m_);
+						+ " Threash " + m);
 			}
 		});
 		JSlider gmax = new JSlider();
@@ -164,7 +164,7 @@ public class ColorFinderTRGB {
 			public void stateChanged(ChangeEvent arg0) {
 				g_ = gmax.getValue();
 				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
-						+ " Min " + m + " Max " + m_);
+						+ " Threash" + m);
 			}
 		});
 		JSlider bmax = new JSlider();
@@ -176,7 +176,7 @@ public class ColorFinderTRGB {
 			public void stateChanged(ChangeEvent arg0) {
 				b_ = bmax.getValue();
 				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
-						+ " Min " + m + " Max " + m_);
+						+ " Threash " + m);
 			}
 		});
 		JButton exit = new JButton();
@@ -196,23 +196,10 @@ public class ColorFinderTRGB {
 			public void stateChanged(ChangeEvent arg0) {
 				m = min.getValue();
 				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
-						+ " Min " + m + " Max " + m_);
-			}
-		});
-		JSlider max = new JSlider();
-		max.setMaximum(255);
-		max.setMinimum(0);
-		max.setValue(255);
-		max.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				m_ = max.getValue();
-				palet.setTitle("Rmin" + r + " Rmax" + r_ + " Gmin" + g + " Gmax" + g_ + " Bmin" + b + " Bmax" + b_
-						+ " Min " + m + " Max " + m_);
+						+ " Threash " + m);
 			}
 		});
 		palet.add(min);
-		palet.add(max);
 		palet.add(rmin);
 		palet.add(rmax);
 		palet.add(gmin);
@@ -229,7 +216,7 @@ public class ColorFinderTRGB {
 			}
 			Mat matp = mat.clone();
 			ArrayList<MatOfPoint> c = new ArrayList<MatOfPoint>();
-			Imgproc.threshold(matp, matp, m, m_, Imgproc.THRESH_BINARY);
+			Imgproc.threshold(matp, matp, m, 255, Imgproc.THRESH_BINARY);
 			Core.inRange(matp, new Scalar(b, g, r), new Scalar(b_, g_, r_), matp);
 			Imgproc.findContours(matp, c, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 			int x = 0;
