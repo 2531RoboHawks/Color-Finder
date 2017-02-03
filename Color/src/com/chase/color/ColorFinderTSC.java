@@ -105,7 +105,7 @@ public class ColorFinderTSC {
 		palet.setLocation(640, 0);
 		palet.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		palet.setLayout(new GridLayout(4, 1));
-		palet.setTitle("Threash" + threash + " Canny1 " + canny1 + " Canny2" + canny2);
+		palet.setTitle("Threash" + threash + " Canny1 " + canny1 + " Canny2 " + canny2);
 		JButton exit = new JButton();
 		exit.addActionListener(new ActionListener() {
 			@Override
@@ -122,7 +122,7 @@ public class ColorFinderTSC {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				threash = thr.getValue();
-				palet.setTitle("Threash" + threash + " Canny1 " + canny1 + " Canny2" + canny2);
+				palet.setTitle("Threash " + threash + " Canny1 " + canny1 + " Canny2 " + canny2);
 			}
 		});
 		JSlider min = new JSlider();
@@ -133,7 +133,7 @@ public class ColorFinderTSC {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				canny1 = min.getValue();
-				palet.setTitle("Threash" + threash + " Canny1 " + canny1 + " Canny2" + canny2);
+				palet.setTitle("Threash " + threash + " Canny1 " + canny1 + " Canny2 " + canny2);
 			}
 		});
 		JSlider max = new JSlider();
@@ -144,7 +144,7 @@ public class ColorFinderTSC {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				canny2 = max.getValue();
-				palet.setTitle("Threash" + threash + " Canny1 " + canny1 + " Canny2" + canny2);
+				palet.setTitle("Threash " + threash + " Canny1 " + canny1 + " Canny2 " + canny2);
 			}
 		});
 		palet.add(thr);

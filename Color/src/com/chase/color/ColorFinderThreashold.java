@@ -198,7 +198,6 @@ public class ColorFinderThreashold {
 			}
 		});
 		palet.add(min);
-		palet.add(max);
 		palet.add(exit);
 		palet.setVisible(true);
 		while (!e) {
