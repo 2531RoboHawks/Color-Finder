@@ -14,7 +14,7 @@ public class Main {
 	public static void main(String[] args) {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(200, 200);
-		f.setLayout(new GridLayout(7, 1));
+		f.setLayout(new GridLayout(8, 1));
 		JButton rgb = new JButton();
 		rgb.addActionListener(new ActionListener() {
 
@@ -196,6 +196,32 @@ public class Main {
 		});
 		e.setText("Threashold Split Canny");
 		f.add(e);
+		JButton g = new JButton();
+		e.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Thread t = new Thread() {
+					public void run() {
+						f.dispose();
+						if (args.length > 0) {
+							try {
+								int n = Integer.parseInt(args[0]);
+								new ColorFinderM(null, n);
+							} catch (NumberFormatException e) {
+								new ColorFinderM(args[0], 0);
+							}
+						} else {
+							new ColorFinderM(args[0], 0);
+						}
+					}
+				};
+				t.start();
+			}
+
+		});
+		g.setText("Motion");
+		f.add(g);
 		f.setVisible(true);
 	}
 
