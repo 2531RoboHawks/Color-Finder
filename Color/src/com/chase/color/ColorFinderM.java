@@ -107,7 +107,7 @@ public class ColorFinderM {
 		palet.setLocation(640, 0);
 		palet.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		palet.setLayout(new GridLayout(2, 1));
-		palet.setTitle("Threash" + t + " Blur" + b);
+		palet.setTitle("Threash" + t);
 		JSlider threash = new JSlider();
 		threash.setMaximum(255);
 		threash.setMinimum(0);
@@ -116,7 +116,7 @@ public class ColorFinderM {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				t = threash.getValue();
-				palet.setTitle("Threash" + t + " Blur" + b);
+				palet.setTitle("Threash" + t);
 			}
 		});
 		JButton exit = new JButton();
@@ -149,7 +149,7 @@ public class ColorFinderM {
 				Rect rect = Imgproc.boundingRect(mop);
 				Imgproc.rectangle(mat1, rect.tl(), rect.br(), new Scalar(0, 255, 0));
 			}
-			img = matToBufferedImage(matp, null);
+			img = matToBufferedImage(mat1, null);
 			view.repaint();
 		}
 		if (cap != null) {

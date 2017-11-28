@@ -197,7 +197,7 @@ public class Main {
 		e.setText("Threashold Split Canny");
 		f.add(e);
 		JButton g = new JButton();
-		e.addActionListener(new ActionListener() {
+		g.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -212,7 +212,7 @@ public class Main {
 								new ColorFinderM(args[0], 0);
 							}
 						} else {
-							new ColorFinderM(args[0], 0);
+							new ColorFinderM(null, 0);
 						}
 					}
 				};
